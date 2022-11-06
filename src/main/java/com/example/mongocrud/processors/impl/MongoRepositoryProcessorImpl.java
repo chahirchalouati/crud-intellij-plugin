@@ -15,7 +15,7 @@ import static com.example.mongocrud.utils.CommandUtils.execute;
 import static com.example.mongocrud.utils.OperationTypeUtils.MONGO_OPERATION_REPOSITORY;
 
 public class MongoRepositoryProcessorImpl extends RepositoryProcessor {
-    private static final Map<String, String> MAP = new HashMap<>();
+    private static final Map<String, Object> MAP = new HashMap<>();
 
     static {
         MAP.put("MongoRepository", "org.springframework.data.mongodb.repository.MongoRepository");
@@ -27,7 +27,8 @@ public class MongoRepositoryProcessorImpl extends RepositoryProcessor {
         final PsiFileFactory fileFactory = PsiFileFactory.getInstance(aClass.getProject());
         final String repoName = String.format("%sRepository.java", aClass.getName());
         final PsiJavaFile javaFile = (PsiJavaFile) fileFactory.createFileFromText(repoName, JavaFileType.INSTANCE, this.generateTemplate(aClass));
-        ClassImportUtils.importClasses(MAP, aClass, javaFile);
+        MAP.put(aClass.getName(), aClass);
+        ClassImportUtils.importClasses(MAP, aClass.getProject(), javaFile);
         final PsiDirectory parentDirectory = PsiDirectoryUtils.getParentDirectory(psiFile);
         final PsiDirectory buildTargetDirectory = PsiDirectoryUtils.buildTargetDirectory(psiFile, parentDirectory, "repository");
         final String packageName = PsiCommonUtils.getPackageName((PsiJavaFile) psiFile, "repository");
