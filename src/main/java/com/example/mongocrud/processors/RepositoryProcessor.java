@@ -1,4 +1,5 @@
 package com.example.mongocrud.processors;
 
-public interface RepositoryProcessor extends Processor {
+public abstract class RepositoryProcessor extends Processor {
+
 }
