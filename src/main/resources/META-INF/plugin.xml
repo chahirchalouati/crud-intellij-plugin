@@ -1,0 +1,18 @@
+<idea-plugin>
+    <id>com.example.mongo-crud</id>
+    <name>Mongo-crud</name>
+    <vendor email="chehhhir@gmail.com" url="https://www.code-dreamers.com">code-dreamers</vendor>
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.java</depends>
+    <extensions defaultExtensionNs="com.intellij">
+
+    </extensions>
+    <actions>
+        <action
+                id="CrudAction"
+                class="com.example.mongocrud.actions.CrudAction"
+                text="Generate CRUD">
+            <add-to-group group-id="CutCopyPasteGroup" anchor="first"/>
+        </action>
+    </actions>
+</idea-plugin>
