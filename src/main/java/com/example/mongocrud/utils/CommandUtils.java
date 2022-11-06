@@ -6,8 +6,17 @@ import com.intellij.openapi.project.Project;
 import java.util.function.Consumer;
 
 public class CommandUtils {
-    public static void execute(Project project, Consumer consumer) {
-        WriteCommandAction.runWriteCommandAction(project, () -> consumer.accept(null));
+    private CommandUtils() {
+    }
+
+    public static void execute(Project project, Consumer<?> consumer) {
+        WriteCommandAction.runWriteCommandAction(project, () -> {
+            try {
+                consumer.accept(null);
+            } catch (Exception e) {
+                DialogUtils.getInfoDialog(project, e.getMessage());
+            }
+        });
 
     }
 

@@ -9,6 +9,9 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class PsiDirectoryUtils {
+    private PsiDirectoryUtils() {
+    }
+
     public static PsiDirectory getOrCreateSubDirectory(PsiDirectory parentDirectory, String subDirectoryName, Project project) {
         return Optional.ofNullable(parentDirectory.findSubdirectory(subDirectoryName)).orElseGet(() -> {
             Runnable r = () -> parentDirectory.createSubdirectory(subDirectoryName);
@@ -18,11 +21,14 @@ public class PsiDirectoryUtils {
     }
 
     public static PsiDirectory buildTargetDirectory(PsiFile psiFile, PsiDirectory parentDirectory, String dirName) {
-        return PsiDirectoryUtils.getOrCreateSubDirectory(Objects.requireNonNull(parentDirectory), dirName, psiFile.getProject());
+        return PsiDirectoryUtils.getOrCreateSubDirectory(Objects.requireNonNull(parentDirectory),
+                dirName,
+                psiFile.getProject());
     }
 
     public static PsiDirectory getParentDirectory(PsiFile psiFile) {
         return Objects.requireNonNull(psiFile)
-                .getContainingDirectory().getParentDirectory();
+                .getContainingDirectory()
+                .getParentDirectory();
     }
 }
