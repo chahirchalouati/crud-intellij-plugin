@@ -2,10 +2,7 @@ package com.example.mongocrud.processors.impl;
 
 import com.example.mongocrud.processors.DtoProcessor;
 import com.example.mongocrud.processors.Processor;
-import com.example.mongocrud.utils.ClassImportUtils;
-import com.example.mongocrud.utils.FieldUtils;
-import com.example.mongocrud.utils.PsiCommonUtils;
-import com.example.mongocrud.utils.PsiDirectoryUtils;
+import com.example.mongocrud.utils.*;
 import com.intellij.ide.highlighter.JavaFileType;
 import com.intellij.psi.*;
 import org.apache.commons.lang.text.StrSubstitutor;
@@ -18,8 +15,6 @@ import java.util.function.Function;
 
 import static com.example.mongocrud.utils.CommandUtils.execute;
 import static com.example.mongocrud.utils.OperationTypeUtils.DTO_OPERATION;
-import static com.example.mongocrud.utils.TemplateUtils.GETTER_TEMPLATE;
-import static com.example.mongocrud.utils.TemplateUtils.SETTER_TEMPLATE;
 import static java.lang.String.format;
 
 public class DtoProcessorImpl extends DtoProcessor {
@@ -32,7 +27,10 @@ public class DtoProcessorImpl extends DtoProcessor {
         importsMap = new HashMap<>();
         fields = new HashMap<>();
     }
-
+    /**
+     * @deprecated
+     */
+    @Deprecated(forRemoval = true, since = "")
     private static Function<Map.Entry<String, String>, String> getTemplate(String tpl) {
         return entry -> {
             final Map<String, String> valuesMap = new HashMap<>();
@@ -44,16 +42,21 @@ public class DtoProcessorImpl extends DtoProcessor {
         };
     }
 
+    private static Function<Map.Entry<String, String>, String> getPropsTemplate() {
+        return entry -> "\"" + entry.getKey() + "='\" + " + entry.getKey() + " + '\\'' +";
+    }
+
     @Override
     public Processor process(PsiClass aClass, PsiFile psiFile) {
         final PsiFileFactory fileFactory = PsiFileFactory.getInstance(aClass.getProject());
         final String fileName = format("%s%s.java", aClass.getName(), SUFFIX);
         final PsiJavaFile javaFile = (PsiJavaFile) fileFactory.createFileFromText(fileName, JavaFileType.INSTANCE, this.generateTemplate(aClass));
         ClassImportUtils.importClasses(importsMap, aClass.getProject(), javaFile);
+        DtoUtils.copyFields(aClass, javaFile);
         final PsiDirectory parentDirectory = PsiDirectoryUtils.getParentDirectory(psiFile);
         final PsiDirectory buildTargetDirectory = PsiDirectoryUtils.buildTargetDirectory(psiFile, parentDirectory, DIR_NAME);
         final String packageName = PsiCommonUtils.getPackageName((PsiJavaFile) psiFile, DIR_NAME);
-        execute(psiFile.getProject(), v -> {
+        execute(psiFile.getProject(), () -> {
             javaFile.setPackageName(packageName);
             PsiCommonUtils.format(javaFile, psiFile.getProject());
             buildTargetDirectory.add(javaFile);
@@ -69,20 +72,19 @@ public class DtoProcessorImpl extends DtoProcessor {
 
     @Override
     public String generateTemplate(PsiClass aClass) {
-        return "public class " + aClass.getName()
-                + "Dto {"
-                + printFields(aClass.getAllFields())
-                + printTemplate(getTemplate(GETTER_TEMPLATE))
-                + printTemplate(getTemplate(SETTER_TEMPLATE))
-                + printToStringTemplate(aClass.getName())
-                + "}";
+        return "public class "
+                + aClass.getName()
+                + "Dto {}";
     }
-
+    /**
+     * @deprecated
+     */
+    @Deprecated(forRemoval = true, since = "")
     private String printToStringTemplate(String className) {
         return "@Override\n" +
                 "public String toString() {\n" +
                 "return \"" + className + "{\" +\n" +
-                printTemplate(entry -> "\"" + entry.getKey() + "='\" + " + entry.getKey() + " + '\\'' +") +
+                printTemplate(getPropsTemplate()) +
                 "'}';\n" +
                 "}";
     }
@@ -96,7 +98,11 @@ public class DtoProcessorImpl extends DtoProcessor {
                 .orElse("");
     }
 
-    private String printFields(PsiField[] allFields) {
+    /**
+     * @deprecated
+     */
+    @Deprecated(forRemoval = true, since = "")
+    private String printFields(PsiField[] allFields) { // Noncompliant
         return Arrays.stream(allFields)
                 .map(declareFields())
                 .map(s -> s.concat("\n"))

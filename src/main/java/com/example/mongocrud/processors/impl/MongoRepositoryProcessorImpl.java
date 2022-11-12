@@ -32,7 +32,7 @@ public class MongoRepositoryProcessorImpl extends RepositoryProcessor {
         final PsiDirectory parentDirectory = PsiDirectoryUtils.getParentDirectory(psiFile);
         final PsiDirectory buildTargetDirectory = PsiDirectoryUtils.buildTargetDirectory(psiFile, parentDirectory, "repository");
         final String packageName = PsiCommonUtils.getPackageName((PsiJavaFile) psiFile, "repository");
-        execute(psiFile.getProject(), v -> {
+        execute(psiFile.getProject(), () -> {
             javaFile.setPackageName(packageName);
             PsiCommonUtils.format(javaFile, psiFile.getProject());
             buildTargetDirectory.add(javaFile);

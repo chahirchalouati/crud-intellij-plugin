@@ -1,5 +1,6 @@
 package com.example.mongocrud.actions;
 
+import com.example.mongocrud.processors.ControllerProcessorImpl;
 import com.example.mongocrud.processors.impl.DtoProcessorImpl;
 import com.example.mongocrud.processors.impl.RepositoryProcessorFactory;
 import com.example.mongocrud.processors.impl.ServiceProcessorFactory;
@@ -36,6 +37,8 @@ public class CrudAction extends AnAction {
                         .next(new DtoProcessorImpl())
                         .process(aClass, psiFile)
                         .next(ServiceProcessorFactory.getServiceProcessor(MONGO_OPERATION_SERVICE))
+                        .process(aClass, psiFile)
+                        .next(new ControllerProcessorImpl())
                         .process(aClass, psiFile);
             }
         });
