@@ -27,6 +27,7 @@ public class DtoProcessorImpl extends DtoProcessor {
         importsMap = new HashMap<>();
         fields = new HashMap<>();
     }
+
     /**
      * @deprecated
      */
@@ -76,6 +77,7 @@ public class DtoProcessorImpl extends DtoProcessor {
                 + aClass.getName()
                 + "Dto {}";
     }
+
     /**
      * @deprecated
      */
