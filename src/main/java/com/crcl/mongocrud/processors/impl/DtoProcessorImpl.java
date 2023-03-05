@@ -1,9 +1,8 @@
 package com.crcl.mongocrud.processors.impl;
 
-import com.crcl.mongocrud.utils.*;
 import com.crcl.mongocrud.processors.DtoProcessor;
 import com.crcl.mongocrud.processors.Processor;
-import com.example.mongocrud.utils.*;
+import com.crcl.mongocrud.utils.*;
 import com.intellij.ide.highlighter.JavaFileType;
 import com.intellij.psi.*;
 import org.apache.commons.lang.text.StrSubstitutor;
