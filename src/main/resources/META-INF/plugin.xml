@@ -10,7 +10,7 @@
     <actions>
         <action
                 id="CrudAction"
-                class="com.example.mongocrud.actions.CrudAction"
+                class="com.crcl.mongocrud.actions.CrudAction"
                 text="Generate CRUD">
             <add-to-group group-id="CutCopyPasteGroup" anchor="first"/>
         </action>
